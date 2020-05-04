@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "outDir": "target/ts",
+        "sourceMap": true,
+		"allowJs": true,
+        "noImplicitAny": true,
+        "target": "es6",
+	    "module": "commonjs",
+	    "moduleResolution": "node",
+	    "declaration": false,
+        "jsx": "react",
+		"lib": ["es6", "DOM"],
+		"types" : ["react", "react-dom"]
+    },
+	"include": [
+        "src/main/ts/**/*"
+    ],
+	"exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ]
+}
