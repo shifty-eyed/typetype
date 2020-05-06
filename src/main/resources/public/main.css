@@ -1,0 +1,23 @@
+html, body {
+	height:100%;
+	line-height: 1;
+	background-color: white;
+}
+
+.textPresenter {
+	margin: auto;
+	padding: 20px;
+	width: 80%;
+	height: 300px;
+	overflow: auto;
+	font-size: 22pt;
+}
+
+.keyBoard {
+	margin: auto;
+	width: 1200px;
+	height: 600px;
+	background-image: url("img/kbrd.webp");
+	background-repeat: no-repeat;
+	background-position: center;
+}

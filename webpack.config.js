@@ -22,6 +22,11 @@ module.exports = {
 	performance: {
 		hints: false
 	},
+	watch: true,
+	watchOptions: {
+		ignored: ['files/**/*.js', 'node_modules/**'],
+		 aggregateTimeout: 600
+	},
 	module: {
 		rules: [
 			{

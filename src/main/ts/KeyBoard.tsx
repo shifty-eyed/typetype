@@ -1,8 +1,13 @@
 import * as React from "react";
 
-export class KeyboardComponent extends React.Component {
+interface InternalProps {
+	expectedKey: string;
+}
 
-	render() {
-		return <img src="img/kbrd.webp"/>;
-	}
+export const KeyboardComponent = ({expectedKey}: InternalProps) => {
+	return (
+		<div className="w3-card keyBoard">
+			{expectedKey}
+		</div>
+	);
 };

@@ -4,16 +4,50 @@ import * as ReactDOM from 'react-dom';
 import { TextPresenter } from './TextPresenter';
 import { KeyboardComponent } from './KeyBoard';
 
-function App() {
-	return (
-		<div className="w3-center">
-			<TextPresenter caretIndex={4} text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." />
-			<KeyboardComponent/>
-		</div>
-	);
+interface AppProps {
+	text: string;
+	caretIndex: number;
+}
+
+export class App extends React.Component<AppProps, AppProps> {
+	
+	constructor(props: AppProps) {
+		super(props);
+		this.state = props;
+		this.handleKeyPress = this.handleKeyPress.bind(this);
+	}
+	
+	expectedChar():string {
+		return this.state.text.charAt(this.state.caretIndex);
+	}
+
+	handleKeyPress(e: KeyboardEvent) {
+		if (this.expectedChar() === e.key) {
+			this.setState({ text: this.state.text, caretIndex: this.state.caretIndex + 1 });
+		} else {
+			console.log('Wrong Key');
+		}
+	}
+
+	componentDidMount() {
+		document.addEventListener('keydown', this.handleKeyPress);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('keydown', this.handleKeyPress);
+	}
+
+	render() {
+		return (
+			<div className="w3-center">
+				<TextPresenter caretIndex={this.state.caretIndex} text={this.props.text} />
+				<KeyboardComponent expectedKey={this.expectedChar()} />
+			</div>
+		);
+	}
 }
 
 ReactDOM.render(
-	<App />,
+	<App caretIndex={0} text="Lorem ipsum dolor sit amet, consectetur adipiscing elit"/>,
 	document.getElementById('root')
 );
