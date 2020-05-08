@@ -8,12 +8,32 @@ html, body {
 	margin: auto;
 	padding: 20px;
 	width: 80%;
-	height: 300px;
+	height: 200px;
 	overflow: auto;
 	font-size: 22pt;
+	font-family: monospace;
+	vertical-align: bottom;
+	letter-spacing: 1px;
+}
+
+.textPresenter .done {
+	color: black;
+}
+
+.textPresenter .undone {
+	color: darkkhaki;
+}
+
+.textPresenterCaret {
+	background-color: blue;
+	color: white;
+	border-width: 1px;
+	letter-spacing: 2px;
+	border-style: solid;
 }
 
 .keyBoard {
+	position:relative;
 	margin: auto;
 	width: 1200px;
 	height: 600px;
@@ -21,3 +41,35 @@ html, body {
 	background-repeat: no-repeat;
 	background-position: center;
 }
+
+.keyButton {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	border-style: solid;
+	border-radius: 3px;
+	border-width: 2px;
+	background-color: lightgray;
+	font-size: 20pt;
+	text-align: center;
+	vertical-align: middle;
+	font-weight: bold;
+	font-family: monospace;
+}
+
+.keyButtonExpected {
+	background-color: tomato!important;
+	animation-name: keyButtonSelected;
+	animation-duration: 2s;
+}
+
+.keyButtonMain {
+	border-color: darkblue;
+}
+
+@keyframes keyButtonExpected {
+  0%   {background-color: lightgray!important}
+  50%  {background-color: tomato!important}
+  100% {background-color: lightgray!important}
+}
+

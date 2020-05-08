@@ -11,6 +11,8 @@ interface AppProps {
 
 export class App extends React.Component<AppProps, AppProps> {
 	
+	isShift: boolean = false;
+	
 	constructor(props: AppProps) {
 		super(props);
 		this.state = props;
@@ -22,26 +24,39 @@ export class App extends React.Component<AppProps, AppProps> {
 	}
 
 	handleKeyPress(e: KeyboardEvent) {
+		if (this.isShift != e.shiftKey) {
+			this.isShift = e.shiftKey;
+			this.forceUpdate();
+		}
 		if (this.expectedChar() === e.key) {
 			this.setState({ text: this.state.text, caretIndex: this.state.caretIndex + 1 });
 		} else {
-			console.log('Wrong Key');
+			//console.log('Wrong Key');
+		}
+	}
+	
+	handleKeyUp(e: KeyboardEvent) {
+		if (this.isShift != e.shiftKey) {
+			this.isShift = e.shiftKey;
+			this.forceUpdate();
 		}
 	}
 
 	componentDidMount() {
 		document.addEventListener('keydown', this.handleKeyPress);
+		document.addEventListener('keyup', this.handleKeyPress);
 	}
 
 	componentWillUnmount() {
 		document.removeEventListener('keydown', this.handleKeyPress);
+		document.removeEventListener('keyup', this.handleKeyPress);
 	}
 
 	render() {
 		return (
-			<div className="w3-center">
+			<div className="w3-center w3-border">
 				<TextPresenter caretIndex={this.state.caretIndex} text={this.props.text} />
-				<KeyboardComponent expectedKey={this.expectedChar()} />
+				<KeyboardComponent expectedKey={this.expectedChar()} shift={this.isShift}/>
 			</div>
 		);
 	}

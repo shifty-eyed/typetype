@@ -12,7 +12,9 @@ export const TextPresenter = (props: InternalProps) => {
 	const part2: string = text.substring(caretIndex + 1);
 	return (
 		<div className="w3-card textPresenter">
-			{part1}<b>{currentSymbol}</b>{part2}
+			<span className="done">{part1}</span>
+			<span className="textPresenterCaret">{currentSymbol}</span>
+			<span className="undone">{part2}</span>
 		</div>
 	);
 };
