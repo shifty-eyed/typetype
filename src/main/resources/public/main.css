@@ -37,39 +37,43 @@ html, body {
 	margin: auto;
 	width: 1200px;
 	height: 600px;
-	background-image: url("img/kbrd.webp");
+	/*background-image: url("img/kbrd.webp");*/
 	background-repeat: no-repeat;
 	background-position: center;
 }
 
 .keyButton {
 	position: absolute;
-	width: 50px;
-	height: 50px;
+	width: 60px;
+	height: 60px;
 	border-style: solid;
 	border-radius: 3px;
-	border-width: 2px;
+	border-width: 1px;
 	background-color: lightgray;
+	box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2);
 	font-size: 20pt;
 	text-align: center;
 	vertical-align: middle;
 	font-weight: bold;
 	font-family: monospace;
+	padding-top: 15px;
 }
 
 .keyButtonExpected {
-	background-color: tomato!important;
-	animation-name: keyButtonSelected;
-	animation-duration: 2s;
+	background-color: tomato;
+	animation-name: keyButtonExpectedAnimation;
+	animation-duration: 0.5s;
+	animation-iteration-count: 9999;
 }
 
 .keyButtonMain {
 	border-color: darkblue;
+	border-width: 3px;
 }
 
-@keyframes keyButtonExpected {
-  0%   {background-color: lightgray!important}
-  50%  {background-color: tomato!important}
-  100% {background-color: lightgray!important}
+@keyframes keyButtonExpectedAnimation {
+  0%   {background-color: lightgray}
+  50%  {background-color: tomato}
+  100% {background-color: lightgray}
 }
 

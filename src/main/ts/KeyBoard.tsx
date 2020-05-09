@@ -1,10 +1,12 @@
 import * as React from "react";
 import * as CSS from "csstype";
 
-const keysRow1:Array<string> = ["1234567890-=", "!@#$%^&*()_+"];
-const keysRow2:Array<string> = ["qwertyuiop[]|", "QWERTYUIOP{}|"];
-const keysRow3:Array<string> = ["asdfghjkl;'", "ASDFGHJKL:"];
-const keysRow4:Array<string> = ["zxcvbnm,./", "ZXCVBNM<>?"];
+const keysRows: Array<Array<string>> = [ 
+	["1234567890-=", "!@#$%^&*()_+"],
+	["qwertyuiop[]\\", "QWERTYUIOP{}|"],
+	["asdfghjkl;'", "ASDFGHJKL:"],
+	["zxcvbnm,./", "ZXCVBNM<>?"]
+];
 
 
 interface KeyButtonProps {
@@ -13,6 +15,7 @@ interface KeyButtonProps {
 	text: string;
 	expected: boolean;
 	main:boolean;
+	width?:number;
 }
 
 const KeyButton = (props:KeyButtonProps) => {
@@ -27,6 +30,9 @@ const KeyButton = (props:KeyButtonProps) => {
 		left: props.x + "px",
 		top: props.y + "px"
 	}
+	if (props.width) {
+		keyStyle["width"] = props.width+"px";
+	}
 	return (
 		<div className={styleClass} style={keyStyle}>
 			{props.text}
@@ -40,7 +46,7 @@ interface InternalProps {
 }
 
 function placeRow(x: number, y: number, expectedKey: string, shift: boolean, template:Array<string>):Array<React.ReactElement> {
-	const gap: number = 60;
+	const gap: number = 70;
 	const mainKeys: string = "asdfjkl;";
 	let result = new Array<React.ReactElement>();
 	const keyCount = template[0].length;
@@ -55,14 +61,28 @@ function placeRow(x: number, y: number, expectedKey: string, shift: boolean, tem
 }
 
 export const KeyboardComponent = ({expectedKey, shift}: InternalProps) => {
-	const gap: number = 60;
+	const gap: number = 70;
+	let shiftRequired = false;
+	for (let i:number=0; i<keysRows.length; i++) {
+		if (keysRows[i][0].includes(expectedKey)) {
+			shiftRequired = false;
+			break;
+		}
+		if (keysRows[i][1].includes(expectedKey)) {
+			shiftRequired = true;
+			break;
+		}
+	}
+		
 	let y = 10;
 	return (
 		<div className="w3-card keyBoard">
-			{placeRow(10, y+=gap, expectedKey, shift, keysRow1)}
-			{placeRow(30, y+=gap, expectedKey, shift, keysRow2)}
-			{placeRow(50, y+=gap, expectedKey, shift, keysRow3)}
-			{placeRow(70, y+=gap, expectedKey, shift, keysRow4)}
+			{placeRow(10, y+=gap, expectedKey, shift, keysRows[0])}
+			{placeRow(40, y+=gap, expectedKey, shift, keysRows[1])}
+			{placeRow(70, y+=gap, expectedKey, shift, keysRows[2])}
+			{placeRow(100, y+=gap, expectedKey, shift, keysRows[3])}
+			<KeyButton x={0} y={y} text="Shift" main={false} expected={shiftRequired} width={90}/>
+			<KeyButton x={800} y={y} text="Shift" main={false} expected={shiftRequired} width={110}/>
 		</div>
 	);
 };
