@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 
 import { TextPresenter } from './TextPresenter';
 import { KeyboardComponent } from './KeyBoard';
+import { MenuBar } from './MenuBar';
 
 interface AppProps {
 	text: string;
@@ -54,7 +55,9 @@ export class App extends React.Component<AppProps, AppProps> {
 
 	render() {
 		return (
-			<div className="w3-center w3-border">
+			<div className="w3-border">
+				<MenuBar />
+				<div className="vSpaceFiller">&nbsp;</div>
 				<TextPresenter caretIndex={this.state.caretIndex} text={this.props.text} />
 				<KeyboardComponent expectedKey={this.expectedChar()} shift={this.isShift}/>
 			</div>
