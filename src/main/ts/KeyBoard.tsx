@@ -61,7 +61,7 @@ interface InternalProps {
 	shift: boolean;
 }
 
-function mapKeyCharToMainFingerKey(key: string): string {
+export function mapKeyCharToMainFingerKey(key: string): string {
 	let result: string = null;
 	fingerMap.forEach((tpl) => {
 		if (tpl[0].includes(key)) {

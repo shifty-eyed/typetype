@@ -81,7 +81,7 @@ html, body {
 }
 
 .keyButtonActiveFinger {
-	background-color: rgb(242, 239, 121);
+	background-color: rgb(225, 221, 138);
 }
 
 @keyframes keyButtonExpectedAnimation {
