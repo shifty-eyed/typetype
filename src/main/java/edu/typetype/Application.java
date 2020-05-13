@@ -1,8 +1,12 @@
 package edu.typetype;
 
-import java.util.Arrays;
+import java.io.IOException;
 
-import org.springframework.boot.CommandLineRunner;
+import javax.annotation.PreDestroy;
+
+import org.firmata4j.IODevice;
+import org.firmata4j.firmata.FirmataDevice;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -11,23 +15,24 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class Application {
 	
+	@Autowired
+	IODevice device;
+	
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
 
 	@Bean
-	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-		return args -> {
-
-			System.out.println("Let's inspect the beans provided by Spring Boot:");
-
-			String[] beanNames = ctx.getBeanDefinitionNames();
-			Arrays.sort(beanNames);
-			for (String beanName : beanNames) {
-				System.out.println(beanName);
-			}
-
-		};
+	public IODevice device(ApplicationContext ctx) throws IOException, InterruptedException {
+		IODevice dev = new FirmataDevice("COM3");
+		dev.start();
+		dev.ensureInitializationIsDone();
+		return dev;
+	}
+	
+	@PreDestroy
+	private void destroy() throws IOException {
+		device.stop();
 	}
 
 }
