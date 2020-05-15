@@ -3,30 +3,18 @@ package edu.typetype.web;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
-import javax.annotation.PostConstruct;
-
-import org.firmata4j.IODevice;
-import org.firmata4j.Pin.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import edu.typetype.service.FingerSignalingDevice;
 
 @RestController
 public class Controller {
 	
 	@Autowired
-	IODevice device;
-	
-	private ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor(); 
-	
-	@PostConstruct
-	private void init() throws IllegalArgumentException, IOException {
-		device.getPin(13).setMode(Mode.OUTPUT);
-	}
+	FingerSignalingDevice device;
 	
 	@RequestMapping("/getLessons")
 	public Map<String,String> getLessons() {
@@ -39,17 +27,10 @@ public class Controller {
 	
 	@RequestMapping("/fingerSignal")
 	public void fingerSignal(String key) throws IllegalStateException, IOException {
-		setPin(1);
-		timer.schedule(() -> setPin(0), 500, TimeUnit.MILLISECONDS);
+		device.signal(key);
 		System.out.println("signal: "+key);
 	}
 	
-	private void setPin(long val) {
-		try {
-			device.getPin(13).setValue(val);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-	}
+
 
 }
