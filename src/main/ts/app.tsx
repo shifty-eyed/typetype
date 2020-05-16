@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from 'react-dom';
 
 import { TextPresenter } from './TextPresenter';
-import { KeyboardComponent, mapKeyCharToMainFingerKey } from './KeyBoard';
+import { KeyboardComponent, mapKeyCharToMainFingerKey, isKeyInSymbolSet } from './KeyBoard';
 import { MenuBar } from './MenuBar';
 
 interface AppProps {
@@ -12,10 +12,31 @@ interface AppProps {
 	errorMessage?: String;
 }
 
+class Sound {
+	private handler: HTMLAudioElement;
+	constructor(src: string) {
+		this.handler = document.createElement("audio");
+		this.handler.src = src;
+		this.handler.setAttribute("preload", "auto");
+		this.handler.setAttribute("controls", "none");
+		this.handler.style.display = "none";
+		document.body.appendChild(this.handler);
+	}
+	
+	play() {
+		this.handler.play();
+	}
+	
+	pause() {
+		this.handler.pause();
+	}
+}
+
 export class App extends React.Component<AppProps, AppProps> {
 
 	isShift: boolean = false;
-	timerId: number;
+	wrongSound: Sound;
+	//correctSound: Sound;
 
 	constructor(props: AppProps) {
 		super(props);
@@ -33,10 +54,16 @@ export class App extends React.Component<AppProps, AppProps> {
 			this.isShift = e.shiftKey;
 			this.forceUpdate();
 		}
-		if (this.expectedChar() === e.key) {
-			this.setState({ /*text: this.state.text, */caretIndex: this.state.caretIndex + 1 });
-		} else {
-			//console.log('Wrong Key');
+		if (isKeyInSymbolSet(e.key)) {
+			if (this.expectedChar() == e.key) {
+				this.setState({ /*text: this.state.text, */caretIndex: this.state.caretIndex + 1 });
+				//this.correctSound.play();
+				console.log("Correct")
+			} else {
+				console.log("Wrong!")
+				this.wrongSound.play();
+			}
+			setTimeout(this.sendSignal.bind(this), 300);
 		}
 	}
 
@@ -45,6 +72,14 @@ export class App extends React.Component<AppProps, AppProps> {
 			this.isShift = e.shiftKey;
 			this.forceUpdate();
 		}
+	}
+
+	sendSignal() {
+		if (this.expectedChar() === " ") {
+			return;
+		}
+		console.log("signal:" + mapKeyCharToMainFingerKey(this.expectedChar()));
+		fetch("fingerSignal?key=" + mapKeyCharToMainFingerKey(this.expectedChar()));
 	}
 
 	componentDidMount() {
@@ -57,21 +92,20 @@ export class App extends React.Component<AppProps, AppProps> {
 				(result) => { this.setState({ menuItems: result }) },
 				(error) => { this.setState({ menuItems: [], errorMessage: error }) }
 			)
-		this.timerId = setInterval(this.sendSignal.bind(this), 3000);
+		setTimeout(this.sendSignal.bind(this), 300);
+		//this.correctSound = new Sound("audio/ding.wav");
+		this.wrongSound = new Sound("audio/wrong.wav");
 	}
 
 	componentWillUnmount() {
 		document.removeEventListener('keydown', this.handleKeyPress);
 		document.removeEventListener('keyup', this.handleKeyPress);
-		clearInterval(this.timerId);
 	}
-	
-	sendSignal() {
-		fetch("fingerSignal?key="+mapKeyCharToMainFingerKey(this.expectedChar()));
-	}
+
 
 	handleMenuClick(text: string) {
 		this.setState({ text: text, caretIndex: 0 });
+		setTimeout(this.sendSignal.bind(this), 300);
 	}
 
 	render() {

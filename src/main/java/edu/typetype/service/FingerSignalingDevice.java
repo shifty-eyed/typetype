@@ -26,6 +26,9 @@ public class FingerSignalingDevice {
 	@Value("500")
 	private long signalLength;
 	
+	@Value("2")
+	private int pinIdOffset;
+	
 	private static final Map<String, Integer> keyToPin = new HashMap<String, Integer>();
 	private static final String KEYS = "asdfjkl;";
 
@@ -37,7 +40,7 @@ public class FingerSignalingDevice {
 		arduino.ensureInitializationIsDone();
 		for (int i=0; i<KEYS.length(); i++) {
 			keyToPin.put(""+KEYS.charAt(i), i);
-			arduino.getPin(i).setMode(Mode.OUTPUT);
+			arduino.getPin(pinIdOffset+i).setMode(Mode.OUTPUT);
 		}
 	}
 

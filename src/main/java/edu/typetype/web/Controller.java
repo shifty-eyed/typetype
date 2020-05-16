@@ -28,7 +28,6 @@ public class Controller {
 	@RequestMapping("/fingerSignal")
 	public void fingerSignal(String key) throws IllegalStateException, IOException {
 		device.signal(key);
-		System.out.println("signal: "+key);
 	}
 	
 

@@ -71,6 +71,15 @@ export function mapKeyCharToMainFingerKey(key: string): string {
 	return result;
 }
 
+export function isKeyInSymbolSet(key: string): boolean {
+	for (let row of keysRows) {
+		if (row[0].includes(key) || row[1].includes(key)) {
+			return true;
+		}
+	}
+	return key === " ";
+}
+
 function placeRow(x: number, y: number, expectedKey: string, shift: boolean, template:Array<string>):Array<React.ReactElement> {
 	const gap: number = 70;
 	let result = new Array<React.ReactElement>();
