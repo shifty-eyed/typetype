@@ -39,7 +39,7 @@ public class FingerSignalingDevice {
 		arduino.start();
 		arduino.ensureInitializationIsDone();
 		for (int i=0; i<KEYS.length(); i++) {
-			keyToPin.put(""+KEYS.charAt(i), i);
+			keyToPin.put(""+KEYS.charAt(i), pinIdOffset+i);
 			arduino.getPin(pinIdOffset+i).setMode(Mode.OUTPUT);
 		}
 	}

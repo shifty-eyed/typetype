@@ -24,6 +24,7 @@ class Sound {
 	}
 	
 	play() {
+		console.log(`playing ${this.handler.src}`);
 		this.handler.play();
 	}
 	
@@ -42,6 +43,7 @@ export class App extends React.Component<AppProps, AppProps> {
 		super(props);
 		this.state = props;
 		this.handleKeyPress = this.handleKeyPress.bind(this);
+		this.handleKeyUp = this.handleKeyUp.bind(this);
 		this.handleMenuClick = this.handleMenuClick.bind(this);
 	}
 
@@ -56,11 +58,11 @@ export class App extends React.Component<AppProps, AppProps> {
 		}
 		if (isKeyInSymbolSet(e.key)) {
 			if (this.expectedChar() == e.key) {
+				console.log(`Correct: exp=${this.expectedChar()}, ke=${e.key}`)
 				this.setState({ /*text: this.state.text, */caretIndex: this.state.caretIndex + 1 });
 				//this.correctSound.play();
-				console.log("Correct")
 			} else {
-				console.log("Wrong!")
+				console.log(`wrong: exp=${this.expectedChar()}, ke=${e.key}`)
 				this.wrongSound.play();
 			}
 			setTimeout(this.sendSignal.bind(this), 300);
@@ -84,7 +86,7 @@ export class App extends React.Component<AppProps, AppProps> {
 
 	componentDidMount() {
 		document.addEventListener('keydown', this.handleKeyPress);
-		document.addEventListener('keyup', this.handleKeyPress);
+		document.addEventListener('keyup', this.handleKeyUp);
 
 		fetch("getLessons")
 			.then(res => res.json())
@@ -99,7 +101,7 @@ export class App extends React.Component<AppProps, AppProps> {
 
 	componentWillUnmount() {
 		document.removeEventListener('keydown', this.handleKeyPress);
-		document.removeEventListener('keyup', this.handleKeyPress);
+		document.removeEventListener('keyup', this.handleKeyUp);
 	}
 
 
@@ -121,6 +123,6 @@ export class App extends React.Component<AppProps, AppProps> {
 }
 
 ReactDOM.render(
-	<App caretIndex={0} text="Lorem ipsum dolor sit amet, consectetur adipiscing elit" />,
+	<App caretIndex={0} text="privet! Lorem ipsum dolor sit amet, consectetur adipiscing elit" />,
 	document.getElementById('root')
 );
