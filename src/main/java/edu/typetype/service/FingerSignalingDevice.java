@@ -23,11 +23,17 @@ public class FingerSignalingDevice {
 	
 	private ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
 	
-	@Value("500")
+	@Value("${typetype.delayBeforeSignal}")
+	private long delayBeforeSignal;
+	
+	@Value("${typetype.signalLength}")
 	private long signalLength;
 	
-	@Value("2")
+	@Value("${arduino.pinIdOffset}")
 	private int pinIdOffset;
+	
+	@Value("${arduino.portName}")
+	private String devicePortName;
 	
 	private static final Map<String, Integer> keyToPin = new HashMap<String, Integer>();
 	private static final String KEYS = "asdfjkl;";
@@ -35,7 +41,7 @@ public class FingerSignalingDevice {
 	
 	@PostConstruct
 	private void init() throws IllegalArgumentException, IOException, InterruptedException {
-		arduino = new FirmataDevice("COM3");
+		arduino = new FirmataDevice(devicePortName);
 		arduino.start();
 		arduino.ensureInitializationIsDone();
 		for (int i=0; i<KEYS.length(); i++) {
@@ -50,8 +56,10 @@ public class FingerSignalingDevice {
 	}
 	
 	public void signal(String key) throws IllegalStateException, IOException {
-		setPin(key, 1);
-		timer.schedule(() -> setPin(key, 0), signalLength, TimeUnit.MILLISECONDS);
+		timer.schedule(() -> {
+			setPin(key, 1);
+			timer.schedule(() -> setPin(key, 0), signalLength, TimeUnit.MILLISECONDS);
+		}, delayBeforeSignal, TimeUnit.MILLISECONDS);
 		System.out.println("signal: "+key);
 	}
 	

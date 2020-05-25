@@ -65,7 +65,7 @@ export class App extends React.Component<AppProps, AppProps> {
 				console.log(`wrong: exp=${this.expectedChar()}, ke=${e.key}`)
 				this.wrongSound.play();
 			}
-			setTimeout(this.sendSignal.bind(this), 300);
+			this.sendSignal();
 		}
 	}
 
@@ -94,7 +94,7 @@ export class App extends React.Component<AppProps, AppProps> {
 				(result) => { this.setState({ menuItems: result }) },
 				(error) => { this.setState({ menuItems: [], errorMessage: error }) }
 			)
-		setTimeout(this.sendSignal.bind(this), 300);
+		this.sendSignal();
 		//this.correctSound = new Sound("audio/ding.wav");
 		this.wrongSound = new Sound("audio/wrong.wav");
 	}
@@ -107,7 +107,7 @@ export class App extends React.Component<AppProps, AppProps> {
 
 	handleMenuClick(text: string) {
 		this.setState({ text: text, caretIndex: 0 });
-		setTimeout(this.sendSignal.bind(this), 300);
+		this.sendSignal();
 	}
 
 	render() {
@@ -123,6 +123,6 @@ export class App extends React.Component<AppProps, AppProps> {
 }
 
 ReactDOM.render(
-	<App caretIndex={0} text="privet! Lorem ipsum dolor sit amet, consectetur adipiscing elit" />,
+	<App caretIndex={0} text="asdfjkl; privet! Lorem ipsum dolor sit amet, consectetur adipiscing elit" />,
 	document.getElementById('root')
 );
