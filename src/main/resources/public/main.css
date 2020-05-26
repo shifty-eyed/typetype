@@ -4,6 +4,43 @@ html, body {
 	background-color: rgb(219, 232, 240);
 }
 
+.menuBox {
+	width: 800px;
+	height: 200px;
+	padding: 10px;
+	resize: both;
+	overflow: auto;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 20px;
+	background-color: white;
+}
+
+.menuButton {
+	height: 30px;
+	background-color:white;
+	display:inline-block;
+	padding: 6px 10px;
+	vertical-align:middle;
+	overflow:hidden;
+	text-align:center;
+	cursor:pointer;
+	white-space:nowrap;
+	margin: 5px;
+	
+	border-radius: 10px;
+	border-color: black;
+	border-width: 1px;
+	box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2);
+	
+}
+
+.menuButton:hover {
+	height: 26px;
+	color:#000;
+	background-color:#ccc;
+}
+
 .textPresenter {
 	margin-left: auto;
 	margin-right: auto;
@@ -88,9 +125,5 @@ html, body {
   0%   {background-color: lightgray}
   50%  {background-color: tomato}
   100% {background-color: lightgray}
-}
-
-.vSpaceFiller {
-	height: 300px;
 }
 

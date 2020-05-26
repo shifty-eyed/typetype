@@ -114,7 +114,6 @@ export class App extends React.Component<AppProps, AppProps> {
 		return (
 			<div className="w3-border">
 				<MenuBar onClick={this.handleMenuClick} items={this.state.menuItems} />
-				<div className="vSpaceFiller">&nbsp;</div>
 				<TextPresenter caretIndex={this.state.caretIndex} text={this.state.text} />
 				<KeyboardComponent expectedKey={this.expectedChar()} shift={this.isShift} />
 			</div>

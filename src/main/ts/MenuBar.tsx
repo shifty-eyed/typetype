@@ -8,10 +8,10 @@ interface InternalProps {
 export const MenuBar = (props:InternalProps) => {
 	let menuButtons: Array<React.ReactElement> = []; 
 	for (const key in props.items) {
-		menuButtons.push(<button className="w3-button" onClick={(e)=>{props.onClick(props.items[key]);e.currentTarget.blur()}}>{key}</button>)
+		menuButtons.push(<button className="menuButton" onClick={(e)=>{props.onClick(props.items[key]);e.currentTarget.blur()}}>{key}</button>)
 	}
 	return (
-		<div className="w3-bar w3-black">
+		<div className="menuBox">
 			{menuButtons}
 		</div>
 	);
