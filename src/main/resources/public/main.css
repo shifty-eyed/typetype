@@ -32,7 +32,17 @@ html, body {
 	border-color: black;
 	border-width: 1px;
 	box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.2);
-	
+}
+
+.menuButton:disabled {
+	background-color:lightgoldenrodyellow;
+	cursor:not-allowed;
+	color:darkgrey;
+}
+
+.menuButton current {
+	background-color:orange;
+	color:white;
 }
 
 .menuButton:hover {

@@ -4,33 +4,20 @@ import * as ReactDOM from 'react-dom';
 import { TextPresenter } from './TextPresenter';
 import { KeyboardComponent, mapKeyCharToMainFingerKey, isKeyInSymbolSet } from './KeyBoard';
 import { MenuBar } from './MenuBar';
+import { Sound } from './Sound';
 
 interface AppProps {
-	text: string;
+	//text: string;
 	caretIndex: number;
-	menuItems?: [];
-	errorMessage?: String;
+	menuItems?: {[key:string]:string};
+	completedItems?: Array<string>;
+	currentItem?: string;
+	errorMessage?: string;
 }
 
-class Sound {
-	private handler: HTMLAudioElement;
-	constructor(src: string) {
-		this.handler = document.createElement("audio");
-		this.handler.src = src;
-		this.handler.setAttribute("preload", "auto");
-		this.handler.setAttribute("controls", "none");
-		this.handler.style.display = "none";
-		document.body.appendChild(this.handler);
-	}
-	
-	play() {
-		console.log(`playing ${this.handler.src}`);
-		this.handler.play();
-	}
-	
-	pause() {
-		this.handler.pause();
-	}
+interface LessonsResult {
+	data: {[key:string]:string};
+	completed: Array<string>;
 }
 
 export class App extends React.Component<AppProps, AppProps> {
@@ -48,7 +35,7 @@ export class App extends React.Component<AppProps, AppProps> {
 	}
 
 	expectedChar(): string {
-		return this.state.text.charAt(this.state.caretIndex);
+		return this.state.menuItems[this.state.currentItem].charAt(this.state.caretIndex);
 	}
 
 	handleKeyPress(e: KeyboardEvent) {
@@ -59,7 +46,7 @@ export class App extends React.Component<AppProps, AppProps> {
 		if (isKeyInSymbolSet(e.key)) {
 			if (this.expectedChar() == e.key) {
 				console.log(`Correct: exp=${this.expectedChar()}, ke=${e.key}`)
-				this.setState({ /*text: this.state.text, */caretIndex: this.state.caretIndex + 1 });
+				this.setState({ caretIndex: this.state.caretIndex + 1 });
 				//this.correctSound.play();
 			} else {
 				console.log(`wrong: exp=${this.expectedChar()}, ke=${e.key}`)
@@ -91,8 +78,11 @@ export class App extends React.Component<AppProps, AppProps> {
 		fetch("getLessons")
 			.then(res => res.json())
 			.then(
-				(result) => { this.setState({ menuItems: result }) },
-				(error) => { this.setState({ menuItems: [], errorMessage: error }) }
+				(result:LessonsResult) => {
+					let selectedKey = result.completed.length == 0 ? Object.keys(result.data)[0] : result.completed[result.completed.length-1];
+					this.setState({ menuItems: result.data, completedItems: result.completed, currentItem:selectedKey }) 
+					},
+				(error) => { this.setState({ menuItems: {}, errorMessage: error }) }
 			)
 		this.sendSignal();
 		//this.correctSound = new Sound("audio/ding.wav");
@@ -105,16 +95,16 @@ export class App extends React.Component<AppProps, AppProps> {
 	}
 
 
-	handleMenuClick(text: string) {
-		this.setState({ text: text, caretIndex: 0 });
+	handleMenuClick(itemKey: string) {
+		this.setState({ caretIndex: 0, currentItem:itemKey });
 		this.sendSignal();
 	}
 
 	render() {
 		return (
 			<div className="w3-border">
-				<MenuBar onClick={this.handleMenuClick} items={this.state.menuItems} />
-				<TextPresenter caretIndex={this.state.caretIndex} text={this.state.text} />
+				<MenuBar onClick={this.handleMenuClick} items={this.state.menuItems} current={this.state.currentItem} />
+				<TextPresenter caretIndex={this.state.caretIndex} text={this.state.menuItems[this.state.currentItem]} />
 				<KeyboardComponent expectedKey={this.expectedChar()} shift={this.isShift} />
 			</div>
 		);
@@ -122,6 +112,6 @@ export class App extends React.Component<AppProps, AppProps> {
 }
 
 ReactDOM.render(
-	<App caretIndex={0} text="asdfjkl; privet! Lorem ipsum dolor sit amet, consectetur adipiscing elit" />,
+	<App caretIndex={0}  />,
 	document.getElementById('root')
 );

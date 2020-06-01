@@ -1,13 +1,16 @@
 package edu.typetype.web;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +37,13 @@ public class Controller {
 	private static final String COMPLETED_FILE_PREFIX = "completed.json"; 
 	
 	@RequestMapping("/getLessons")
-	public String getLessons() throws IOException {
+	public Map<String,Object> getLessons() throws IOException {
 		try(InputStream in = new FileInputStream(dataDir+"/"+LESSON_FILE)) {
-			return IOUtils.toString(in, Charset.forName("UTF-8"));
+			Map<String,Object> result = new HashMap<String, Object>();
+			result.put("data", IOUtils.toString(in, Charset.forName("UTF-8")));
+			result.put("completed", getCompletedLessons());
+			return result;
+			
 		}
 	}
 	
@@ -44,6 +51,8 @@ public class Controller {
 	public String[] getCompletedLessons() throws IOException {
 		try(InputStream in = new FileInputStream(dataDir+COMPLETED_FILE_PREFIX)) {
 			return json.readValue(IOUtils.toString(in, Charset.forName("UTF-8")), String[].class);
+		} catch (FileNotFoundException e) {
+			return new String[0];
 		}
 	}
 	
