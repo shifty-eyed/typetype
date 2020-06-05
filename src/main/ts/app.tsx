@@ -35,7 +35,7 @@ export class App extends React.Component<AppProps, AppProps> {
 	}
 
 	expectedChar(): string {
-		return this.state.menuItems[this.state.currentItem].charAt(this.state.caretIndex);
+		return !this.state.menuItems ? "" : this.state.menuItems[this.state.currentItem].charAt(this.state.caretIndex);
 	}
 
 	handleKeyPress(e: KeyboardEvent) {
@@ -103,8 +103,8 @@ export class App extends React.Component<AppProps, AppProps> {
 	render() {
 		return (
 			<div className="w3-border">
-				<MenuBar onClick={this.handleMenuClick} items={this.state.menuItems} current={this.state.currentItem} />
-				<TextPresenter caretIndex={this.state.caretIndex} text={this.state.menuItems[this.state.currentItem]} />
+				<MenuBar onClick={this.handleMenuClick} items={this.state.menuItems} completedItems={this.state.completedItems} current={this.state.currentItem} />
+				<TextPresenter caretIndex={this.state.caretIndex} text={!this.state.menuItems ? "" : this.state.menuItems[this.state.currentItem]} />
 				<KeyboardComponent expectedKey={this.expectedChar()} shift={this.isShift} />
 			</div>
 		);

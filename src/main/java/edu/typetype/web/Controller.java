@@ -8,9 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +31,14 @@ public class Controller {
 	
 	private static final ObjectMapper json = new ObjectMapper(); 
 	
-	private static final String LESSON_FILE = "lesson.json"; 
+	private static final String LESSON_FILE = "lessons.json"; 
 	private static final String COMPLETED_FILE_PREFIX = "completed.json"; 
 	
 	@RequestMapping("/getLessons")
-	public Map<String,Object> getLessons() throws IOException {
+	public String getLessons() throws IOException {
 		try(InputStream in = new FileInputStream(dataDir+"/"+LESSON_FILE)) {
-			Map<String,Object> result = new HashMap<String, Object>();
-			result.put("data", IOUtils.toString(in, Charset.forName("UTF-8")));
-			result.put("completed", getCompletedLessons());
-			return result;
-			
+			return String.format("{\"data\":%s, \"completed\":%s}", 
+					IOUtils.toString(in, Charset.forName("UTF-8")), Arrays.toString(getCompletedLessons()));
 		}
 	}
 	

@@ -40,15 +40,10 @@ html, body {
 	color:darkgrey;
 }
 
-.menuButton current {
+.menuButtonCurrent {
 	background-color:orange;
-	color:white;
-}
-
-.menuButton:hover {
-	height: 26px;
-	color:#000;
-	background-color:#ccc;
+	color:black;
+	font-weight: bold;
 }
 
 .textPresenter {
