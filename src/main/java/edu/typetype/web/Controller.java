@@ -8,7 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,25 +38,27 @@ public class Controller {
 	@RequestMapping("/getLessons")
 	public String getLessons() throws IOException {
 		try(InputStream in = new FileInputStream(dataDir+"/"+LESSON_FILE)) {
+			String cmplLessons = getCompletedLessons();
 			return String.format("{\"data\":%s, \"completed\":%s}", 
-					IOUtils.toString(in, Charset.forName("UTF-8")), Arrays.toString(getCompletedLessons()));
+					IOUtils.toString(in, Charset.forName("UTF-8")), cmplLessons.isEmpty() ? "\"\"" : cmplLessons);
 		}
 	}
 	
-	@RequestMapping("/getCompletedLessons")
-	public String[] getCompletedLessons() throws IOException {
-		try(InputStream in = new FileInputStream(dataDir+COMPLETED_FILE_PREFIX)) {
-			return json.readValue(IOUtils.toString(in, Charset.forName("UTF-8")), String[].class);
+	//@RequestMapping("/getCompletedLessons")
+	public String getCompletedLessons() throws IOException {
+		try(InputStream in = new FileInputStream(dataDir+"/"+COMPLETED_FILE_PREFIX)) {
+			return IOUtils.toString(in, Charset.forName("UTF-8"));
 		} catch (FileNotFoundException e) {
-			return new String[0];
+			return "";
 		}
 	}
 	
 	@RequestMapping("/markLessonCompleted")
 	public void markLessonCompleted(String lessonId) throws IOException {
-		List<String> lessons = Arrays.asList(getCompletedLessons());
+		String[] cmplLessons = json.readValue(getCompletedLessons(), String[].class);
+		Collection<String> lessons = new LinkedHashSet<String>(Arrays.asList(cmplLessons));
 		lessons.add(lessonId);
-		try(OutputStream out = new FileOutputStream(dataDir+COMPLETED_FILE_PREFIX)) {
+		try(OutputStream out = new FileOutputStream(dataDir+"/"+COMPLETED_FILE_PREFIX)) {
 			IOUtils.write(json.writeValueAsString(lessons.toArray()), out, Charset.forName("UTF-8"));
 		}
 	}

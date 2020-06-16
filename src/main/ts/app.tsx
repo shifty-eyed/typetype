@@ -1,5 +1,6 @@
-import * as React from "react";
-import * as ReactDOM from 'react-dom';
+import * as React from "react"
+import * as ReactDOM from 'react-dom'
+import SplitPane from 'react-split-pane'
 
 import { TextPresenter } from './TextPresenter';
 import { KeyboardComponent, mapKeyCharToMainFingerKey, isKeyInSymbolSet } from './KeyBoard';
@@ -35,7 +36,32 @@ export class App extends React.Component<AppProps, AppProps> {
 	}
 
 	expectedChar(): string {
-		return !this.state.menuItems ? "" : this.state.menuItems[this.state.currentItem].charAt(this.state.caretIndex);
+		return this.lessonText().charAt(this.state.caretIndex);
+	}
+	
+	lessonText(): string {
+		const result = !this.state.menuItems ? "_" : this.state.menuItems[this.state.currentItem]
+		if (!result) {
+			console.log(result);	
+		}
+		return result
+	}
+	
+	nextIncompleteLessonKey(menuItems: {[key:string]:string}, completedItems: Array<string>): string {
+		for (const key in menuItems) {
+			if (completedItems.indexOf(key) < 0) {
+				return key;
+			}
+		}
+		return null;
+	}
+	
+	completeLesson()  {
+		fetch("markLessonCompleted?lessonId=" + this.state.currentItem);
+		let completedItems: Array<string> = Object.assign({}, this.state.completedItems)
+		completedItems.push(this.state.currentItem)
+		let selectedKey = this.nextIncompleteLessonKey(this.state.menuItems, completedItems)
+		this.setState({ completedItems: completedItems, currentItem:selectedKey }) 
 	}
 
 	handleKeyPress(e: KeyboardEvent) {
@@ -45,11 +71,14 @@ export class App extends React.Component<AppProps, AppProps> {
 		}
 		if (isKeyInSymbolSet(e.key)) {
 			if (this.expectedChar() == e.key) {
-				console.log(`Correct: exp=${this.expectedChar()}, ke=${e.key}`)
+				if (this.lessonText().length <= this.state.caretIndex+1) {
+					//this.doneSound.play();
+					this.completeLesson();
+					return;
+				}
 				this.setState({ caretIndex: this.state.caretIndex + 1 });
 				//this.correctSound.play();
 			} else {
-				console.log(`wrong: exp=${this.expectedChar()}, ke=${e.key}`)
 				this.wrongSound.play();
 			}
 			this.sendSignal();
@@ -76,13 +105,15 @@ export class App extends React.Component<AppProps, AppProps> {
 		document.addEventListener('keyup', this.handleKeyUp);
 
 		fetch("getLessons")
+			//.then(res => res.text())
+			//.then(txt => console.log(txt));
 			.then(res => res.json())
 			.then(
 				(result:LessonsResult) => {
-					let selectedKey = result.completed.length == 0 ? Object.keys(result.data)[0] : result.completed[result.completed.length-1];
+					let selectedKey = this.nextIncompleteLessonKey(result.data, result.completed)
 					this.setState({ menuItems: result.data, completedItems: result.completed, currentItem:selectedKey }) 
 					},
-				(error) => { this.setState({ menuItems: {}, errorMessage: error }) }
+				(error:any) => { this.setState({ menuItems: {}, errorMessage: error.message }) }
 			)
 		this.sendSignal();
 		//this.correctSound = new Sound("audio/ding.wav");
@@ -99,14 +130,19 @@ export class App extends React.Component<AppProps, AppProps> {
 		this.setState({ caretIndex: 0, currentItem:itemKey });
 		this.sendSignal();
 	}
-
+	
 	render() {
+		if (this.state.errorMessage) {
+			return <h3 style={{color:"red"}}>{this.state.errorMessage}</h3>
+		}
 		return (
-			<div className="w3-border">
+			<SplitPane split="horizontal" minSize={50} defaultSize={100} allowResize={true}>
 				<MenuBar onClick={this.handleMenuClick} items={this.state.menuItems} completedItems={this.state.completedItems} current={this.state.currentItem} />
-				<TextPresenter caretIndex={this.state.caretIndex} text={!this.state.menuItems ? "" : this.state.menuItems[this.state.currentItem]} />
-				<KeyboardComponent expectedKey={this.expectedChar()} shift={this.isShift} />
-			</div>
+				<div style={{marginTop:"20px"}}>
+					<TextPresenter caretIndex={this.state.caretIndex} text={this.lessonText()} />
+					<KeyboardComponent expectedKey={this.expectedChar()} shift={this.isShift} />
+				</div>
+			</SplitPane>
 		);
 	}
 }

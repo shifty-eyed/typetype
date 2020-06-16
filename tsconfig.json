@@ -3,7 +3,7 @@
         "outDir": "target/ts",
         "sourceMap": true,
 		"allowJs": true,
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "target": "es6",
 	    "module": "commonjs",
 	    "moduleResolution": "node",

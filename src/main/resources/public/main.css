@@ -5,19 +5,14 @@ html, body {
 }
 
 .menuBox {
-	width: 800px;
-	height: 200px;
+	width: 100%;
 	padding: 10px;
-	resize: both;
 	overflow: auto;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: 20px;
-	background-color: white;
+	background-color: rgb(219, 232, 240);
+	box-shadow: inset 0 0 3px rgb(0, 255, 255), inset 0 0 5px rgb(0, 0, 255);
 }
 
 .menuButton {
-	height: 30px;
 	background-color:white;
 	display:inline-block;
 	padding: 6px 10px;
@@ -27,7 +22,6 @@ html, body {
 	cursor:pointer;
 	white-space:nowrap;
 	margin: 5px;
-	
 	border-radius: 10px;
 	border-color: black;
 	border-width: 1px;

@@ -36,6 +36,8 @@
     "jquery-datetimepicker": "^2.5.21",
     "npm-install-webpack-plugin": "^4.0.5",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-split": "^2.0.7",
+    "react-split-pane": "^0.1.91"
   }
 }

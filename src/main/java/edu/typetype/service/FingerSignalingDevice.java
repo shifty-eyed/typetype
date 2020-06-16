@@ -41,7 +41,8 @@ public class FingerSignalingDevice {
 	
 	@PostConstruct
 	private void init() throws IllegalArgumentException, IOException, InterruptedException {
-		arduino = new FirmataDevice(devicePortName);
+		//arduino = new FirmataDevice(devicePortName);
+		arduino = new MockArduino();
 		arduino.start();
 		arduino.ensureInitializationIsDone();
 		for (int i=0; i<KEYS.length(); i++) {
