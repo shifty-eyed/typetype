@@ -58,10 +58,10 @@ export class App extends React.Component<AppProps, AppProps> {
 	
 	completeLesson()  {
 		fetch("markLessonCompleted?lessonId=" + this.state.currentItem);
-		let completedItems: Array<string> = Object.assign({}, this.state.completedItems)
+		let completedItems: Array<string> = [].concat(this.state.completedItems);
 		completedItems.push(this.state.currentItem)
 		let selectedKey = this.nextIncompleteLessonKey(this.state.menuItems, completedItems)
-		this.setState({ completedItems: completedItems, currentItem:selectedKey }) 
+		this.setState({ caretIndex:0, completedItems: completedItems, currentItem:selectedKey }) 
 	}
 
 	handleKeyPress(e: KeyboardEvent) {

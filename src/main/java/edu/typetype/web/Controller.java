@@ -38,24 +38,22 @@ public class Controller {
 	@RequestMapping("/getLessons")
 	public String getLessons() throws IOException {
 		try(InputStream in = new FileInputStream(dataDir+"/"+LESSON_FILE)) {
-			String cmplLessons = getCompletedLessons();
 			return String.format("{\"data\":%s, \"completed\":%s}", 
-					IOUtils.toString(in, Charset.forName("UTF-8")), cmplLessons.isEmpty() ? "\"\"" : cmplLessons);
+					IOUtils.toString(in, Charset.forName("UTF-8")), loadCompletedLessons());
 		}
 	}
 	
-	//@RequestMapping("/getCompletedLessons")
-	public String getCompletedLessons() throws IOException {
+	private String loadCompletedLessons() throws IOException {
 		try(InputStream in = new FileInputStream(dataDir+"/"+COMPLETED_FILE_PREFIX)) {
 			return IOUtils.toString(in, Charset.forName("UTF-8"));
 		} catch (FileNotFoundException e) {
-			return "";
+			return "[]";
 		}
 	}
 	
 	@RequestMapping("/markLessonCompleted")
 	public void markLessonCompleted(String lessonId) throws IOException {
-		String[] cmplLessons = json.readValue(getCompletedLessons(), String[].class);
+		String[] cmplLessons = json.readValue(loadCompletedLessons(), String[].class);
 		Collection<String> lessons = new LinkedHashSet<String>(Arrays.asList(cmplLessons));
 		lessons.add(lessonId);
 		try(OutputStream out = new FileOutputStream(dataDir+"/"+COMPLETED_FILE_PREFIX)) {

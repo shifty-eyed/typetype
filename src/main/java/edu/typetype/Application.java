@@ -10,6 +10,6 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 	
-	//TODO: make many lessons,  lessons completed save on server - markLessonCompleted, styles
+	//TODO: make many lessons
 	//TODO: REAL: gloves, keybrd cover, device cover/box 
 }
